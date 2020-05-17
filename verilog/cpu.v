@@ -1,6 +1,12 @@
+`ifndef __CPU_V__
+`define __CPU_V__
+
+`default_nettype none
+
+`include "ALU.v"
 /*
  * verilog model of 6502 CPU.
- *
+
  * (C) Arlet Ottens, <arlet@c-scape.nl>
  *
  * Feel free to use this code in any project (commercial or not), as long as you
@@ -1218,3 +1224,4 @@ always @(posedge clk )
         NMI_edge <= 1;
 
 endmodule
+`endif // __CPU_V__

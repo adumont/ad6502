@@ -1,3 +1,8 @@
+`ifndef __ALU_V__
+`define __ALU_V__
+
+`default_nettype none
+
 /*
  * ALU.
  *
@@ -106,3 +111,4 @@ assign V = AI7 ^ BI7 ^ CO ^ N;
 assign Z = ~|OUT;
 
 endmodule
+`endif // __ALU_V__
