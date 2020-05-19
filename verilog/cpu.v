@@ -1,3 +1,4 @@
+  /* verilator lint_off CASEX */
 `ifndef __CPU_V__
 `define __CPU_V__
 
@@ -92,7 +93,7 @@ parameter
  */
 
 
-`ifdef SIM
+`ifndef SYNTHESIS
 wire [7:0]   A = AXYS[SEL_A];           // Accumulator
 wire [7:0]   X = AXYS[SEL_X];           // X register
 wire [7:0]   Y = AXYS[SEL_Y];           // Y register 
@@ -159,7 +160,7 @@ reg res;                // in reset
  * ALU operations
  */
 
-parameter
+localparam
         OP_OR  = 4'b1100,
         OP_AND = 4'b1101,
         OP_EOR = 4'b1110,
@@ -175,7 +176,7 @@ parameter
  * kept in separate flops. 
  */
 
-parameter 
+localparam
     ABS0   = 6'd0,  // ABS     - fetch LSB      
     ABS1   = 6'd1,  // ABS     - fetch MSB
     ABSX0  = 6'd2,  // ABS, X  - fetch LSB and send to ALU (+X)
@@ -227,8 +228,7 @@ parameter
     ZPX0   = 6'd48, // ZP, X   - fetch ZP, and send to ALU (+X)
     ZPX1   = 6'd49; // ZP, X   - load from memory
 
-`ifdef SIM
-
+`ifndef SYNTHESIS
 /*
  * easy to read names in simulator output
  */
@@ -286,10 +286,11 @@ always @*
             JMP1:   statename = "JMP1";
             JMPI0:  statename = "JMPI0";
             JMPI1:  statename = "JMPI1";
+            default:  statename = "INVAL";
     endcase
 
-//always @( PC )
-//      $display( "%t, PC:%04x IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x", $time, PC, IR, A, X, Y, S, C, Z, V, N, P );
+always @( PC )
+     $display( "%t, PC:%04x IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x", $time, PC, IR, A, X, Y, S, C, Z, V, N, P );
 
 `endif
 
@@ -354,7 +355,7 @@ always @*
  */
 always @(posedge clk) 
     if( RDY )
-        PC <= PC_temp + PC_inc;
+        PC <= PC_temp + {15'b 0, PC_inc};
 
 /*
  * Address Generator 
@@ -601,7 +602,7 @@ always @*
         REG :   alu_op = op; 
 
         DECODE,
-        ABS1:   alu_op = 1'bx;
+        ABS1:   alu_op = 4'bx;
 
         PUSH1,
         BRK0,
@@ -865,6 +866,7 @@ assign DIMUX = ~RDY ? DIHOLD : DI;
 /*
  * Microcode state machine
  */
+/* verilator lint_off CASEINCOMPLETE */
 always @(posedge clk or posedge reset)
     if( reset )
         state <= BRK0;
@@ -964,6 +966,7 @@ always @(posedge clk or posedge reset)
         BRK3    : state <= JMP0;
 
     endcase
+/* verilator lint_on CASEINCOMPLETE */
 
 /*
  * Additional control signals
@@ -986,7 +989,9 @@ always @(posedge clk)
                 8'b1011x1x0,    // LDX/LDY
                 8'b11001010,    // DEX
                 8'b1x1xxx01,    // LDA, SBC
+/* verilator lint_off CASEOVERLAP */
                 8'bxxx01000:    // DEY, TAY, INY, INX
+/* verilator lint_on CASEOVERLAP */
                                 load_reg <= 1;
 
                 default:        load_reg <= 0;
@@ -1019,7 +1024,9 @@ always @(posedge clk)
                                 src_reg <= SEL_S; 
 
                 8'b100x_x110,   // STX
+                /* verilator lint_off CASEOVERLAP */
                 8'b100x_1x10,   // TXA, TXS
+                /* verilator lint_on CASEOVERLAP */
                 8'b1110_xx00,   // INX, CPX
                 8'b1100_1010:   // DEX
                                 src_reg <= SEL_X; 
