@@ -1,0 +1,10 @@
+.sconsign.dblite
+*.out
+*.vcd
+*.blif
+*.asc
+*.bin
+*.ivl
+*.pnr
+*.log
+build.config
