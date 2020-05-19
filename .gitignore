@@ -8,3 +8,4 @@
 *.pnr
 *.log
 build.config
+build-*-Desktop-Debug
