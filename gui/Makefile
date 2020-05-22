@@ -39,6 +39,8 @@ qtclean:
 
 clean: vclean qtclean
 
+refresh: qtclean $(PROJECT).mk
+
 run: $(PROJECT)
 	./$(PROJECT)
 

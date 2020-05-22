@@ -289,8 +289,17 @@ always @*
             default:  statename = "INVAL";
     endcase
 
-always @( PC )
-     $display( "%t, PC:%04x IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x", $time, PC, IR, A, X, Y, S, C, Z, V, N, P );
+    always @(*)
+    begin
+        $display( "%06t %d PCtmp:%04x PC:%04x %6s IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x AB:%04x DI:%02x DO:%02x", $time, clk, PC_temp, PC, statename, IR, A, X, Y, S, C, Z, V, N, P, AB, DI, DO );
+    end
+
+    // always @(*)
+    //     $display( "%08t, PC:%04x PC_inc:%d PC_temp:%04x", $time, PC, PC_inc, PC_temp);
+
+    // always @(*)
+    //     $display( "%08t, IR:%02x IRHOLD_valid:%d IRHOLD:%02x", $time, IR, IRHOLD_valid, IRHOLD);
+
 
 `endif
 
@@ -354,9 +363,10 @@ always @*
  * Set new PC
  */
 always @(posedge clk) 
+    /* verilator lint_off WIDTH */
     if( RDY )
         PC <= PC_temp + {15'b 0, PC_inc};
-
+    /* verilator lint_on WIDTH */
 /*
  * Address Generator 
  */

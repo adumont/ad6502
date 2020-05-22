@@ -42,8 +42,28 @@ MainWindow::MainWindow(QWidget *parent) :
     top->trace (tfp, 99);
     //tfp->spTrace()->set_time_resolution ("1 ps");
     tfp->open ("ad6502.vcd");
-    tfp->dump(main_time);
-    tfp->flush(); // any impact on perf? not relevant here
+    if(ui->actionGenerate_Trace->isChecked()) {
+        tfp->dump(main_time);
+        tfp->flush(); // any impact on perf? not relevant here
+    }
+
+    gpio_in_list<<ui->gpio_in0;
+    gpio_in_list<<ui->gpio_in1;
+    gpio_in_list<<ui->gpio_in2;
+    gpio_in_list<<ui->gpio_in3;
+    gpio_in_list<<ui->gpio_in4;
+    gpio_in_list<<ui->gpio_in5;
+    gpio_in_list<<ui->gpio_in6;
+    gpio_in_list<<ui->gpio_in7;
+
+    connect(ui->gpio_in0, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in1, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in2, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in3, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in4, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in5, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in6, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
+    connect(ui->gpio_in7, SIGNAL(stateChanged(int)), this, SLOT(on_any_gpio_in_toggled()));
 
     m_timer = new QTimer(this);
     QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(clkTick()));
@@ -106,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     // we close vcd:
-    tfp->flush(); // any impact on perf? not relevant here
+    if(ui->actionGenerate_Trace->isChecked()) tfp->flush(); // any impact on perf? not relevant here
     tfp->close();
 
     delete ui;
@@ -147,9 +167,11 @@ void MainWindow::on_pbB_toggled(bool checked)
 
 void MainWindow::updateUI()
 {
-    bool toUintSuccess;
-#ifdef KK
+
     // update INPUTS before we EVAL()
+    // for now, all input are assigned in their respective UI slots
+
+#ifdef KK
     top->cpu_in_wr = ui->pbPUSH->isChecked();
     top->cpu_dmp_chip_select = ui->dmp_module->value();
     top->cpu_dmp_fifo_pos = ui->dmp_position->value();
@@ -159,12 +181,15 @@ void MainWindow::updateUI()
 //    ss << std::hex << ui->editINdata->text();
 //    ss >> top->cpu_in_data;
 
+    bool toUintSuccess;
     top->cpu_in_data = ui->editINdata->text().toUInt(&toUintSuccess,16); //ui->editINdata->text().toInt();
 #endif
 
     top->eval();
-    tfp->dump(main_time);
-    tfp->flush(); // any impact on perf? not relevant here
+    if(ui->actionGenerate_Trace->isChecked()) {
+        tfp->dump(main_time);
+        tfp->flush(); // any impact on perf? not relevant here
+    }
 
     // Control Block
     ui->clk->setState( clk );
@@ -177,6 +202,45 @@ void MainWindow::updateUI()
 
     // PC
     ui->PC_PC->setText(formatData( top->top__DOT__CPU__DOT__PC));
+
+    // Registers AXYS
+    ui->R_A->setText(formatData( top->top__DOT__CPU__DOT__A ));
+    ui->R_X->setText(formatData( top->top__DOT__CPU__DOT__X ));
+    ui->R_Y->setText(formatData( top->top__DOT__CPU__DOT__Y ));
+    ui->R_S->setText(formatData( top->top__DOT__CPU__DOT__S ));
+//    ui->led_R_wR->setState( top->hrmcpu__DOT__register0__DOT__wR );
+//    highlightLabel(ui->R_R, top->hrmcpu__DOT__register0__DOT__wR);
+
+    // Chip Select leds
+    ui->led_cs_ram->setState( top->top__DOT__cs_ram );
+    ui->led_cs_rom->setState( top->top__DOT__cs_rom );
+    ui->led_cs_gpio->setState( top->top__DOT__cs_gpio );
+    ui->led_cs_acia->setState( top->top__DOT__cs_acia );
+
+    // IR Instruction Register
+    ui->IR_IR->setText(formatData( top->top__DOT__CPU__DOT__IR ));
+    ui->IR_IRHOLD->setText(formatData( top->top__DOT__CPU__DOT__IRHOLD ));
+    ui->led_IRHOLD_valid->setState( top->top__DOT__CPU__DOT__IRHOLD_valid );
+
+    // Data & Address Buses
+    ui->DI->setText(formatData( top->top__DOT__CPU__DOT__DI ));
+    ui->DO->setText(formatData( top->top__DOT__CPU__DOT__DO ));
+    ui->AB->setText(formatData( top->top__DOT__CPU__DOT__AB ));
+    ui->led_WE->setState( top->top__DOT__CPU__DOT__WE );
+
+    // GPIO OUT
+    ui->val_gpio_out->setText(formatData( top->gpio_o ));
+    ui->led0->setState( top->gpio_o >> 0 & 1 );
+    ui->led1->setState( top->gpio_o >> 1 & 1 );
+    ui->led2->setState( top->gpio_o >> 2 & 1 );
+    ui->led3->setState( top->gpio_o >> 3 & 1 );
+    ui->led4->setState( top->gpio_o >> 4 & 1 );
+    ui->led5->setState( top->gpio_o >> 5 & 1 );
+    ui->led6->setState( top->gpio_o >> 6 & 1 );
+    ui->led7->setState( top->gpio_o >> 7 & 1 );
+
+    // GPIO IN
+    ui->val_gpio_in->setText(QString("%1").arg( gpio_in, 2, 16, QChar('0')).toUpper());
 
 #ifdef KK
     ui->led_halt->setState(top->hrmcpu__DOT__cu_halt);
@@ -309,22 +373,6 @@ void MainWindow::updateUI()
             ui->tblOUTBOX->item(i,0)->setBackground(Qt::white);
     }
 
-    // LEDS
-    ui->R_LEDs->setText(formatData( top->cpu_o_leds ));
-    ui->led0->setState( top->cpu_o_leds >> 0 & 1 );
-    ui->led1->setState( top->cpu_o_leds >> 1 & 1 );
-    ui->led2->setState( top->cpu_o_leds >> 2 & 1 );
-    ui->led3->setState( top->cpu_o_leds >> 3 & 1 );
-    ui->led4->setState( top->cpu_o_leds >> 4 & 1 );
-    ui->led5->setState( top->cpu_o_leds >> 5 & 1 );
-    ui->led6->setState( top->cpu_o_leds >> 6 & 1 );
-    ui->led7->setState( top->cpu_o_leds >> 7 & 1 );
-
-    // MMIO Chip Select signals
-    ui->led_cs_RAM0->setState( top->hrmcpu__DOT__MEMORY0__DOT__mem_wrapper0__DOT__cs_RAM0 );
-    ui->led_cs_XALU->setState( top->hrmcpu__DOT__MEMORY0__DOT__mem_wrapper0__DOT__cs_XALU );
-    ui->led_cs_LEDS->setState( top->hrmcpu__DOT__MEMORY0__DOT__mem_wrapper0__DOT__cs_LEDS );
-    ui->led_cs_RAND->setState( top->hrmcpu__DOT__MEMORY0__DOT__mem_wrapper0__DOT__cs_RAND );
 
     // Update debug (dump) values
     ui->led_dmp_valid->setState( top->cpu_dmp_valid );
@@ -521,10 +569,26 @@ void MainWindow::on_dmp_position_valueChanged(int arg1)
 
 void MainWindow::on_pbHold_toggled(bool checked)
 {
-#ifdef KK
     ui->pbINSTR->setDisabled(checked);
 
-    top->cpu_hold=checked;
-    updateUI();
-#endif
+    // store value in Verilator model
+    top->hold=ui->pbHold->isChecked();
+}
+
+void MainWindow::on_any_gpio_in_toggled()
+{
+    // https://stackoverflow.com/a/24261056/728281
+
+    QCheckBox* pCheckBox = qobject_cast<QCheckBox*>(sender());
+    if (!pCheckBox) // this is just a safety check
+        return;
+
+    unsigned char i = gpio_in_list.indexOf(pCheckBox);
+
+    gpio_in += (1<<i)*( pCheckBox->isChecked() ? 1 : -1 );
+
+    ui->val_gpio_in->setText(QString("%1").arg( gpio_in, 2, 16, QChar('0')).toUpper());
+
+    // store value in Verilator model
+    top->gpio_i=gpio_in;
 }

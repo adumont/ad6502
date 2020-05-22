@@ -13,16 +13,18 @@ module top (
 `ifndef SYNTHESIS
     // Simulation Only
     input  wire       i_rst,
+    input  wire       hold,
+    input  wire [7:0] gpio_i,
 `endif
-    // input wire  [7:0] gpio_i,
     output reg  [7:0] gpio_o
   );
 
 `ifdef SYNTHESIS
   wire i_rst = 1'b 0;
-`endif
+  wire hold  = 1'b 0;
 
   wire [7:0] gpio_i = 8'b0;
+`endif
 
   // //`ifdef BOARD_HAVE_BUTTONS
   // wire sw1_d; // pulse when sw pressed
@@ -91,7 +93,7 @@ module top (
   assign i_CPU_DI    = o_DataMux_dout ;
   assign i_CPU_IRQ   = 1'b0 ;
   assign i_CPU_NMI   = 1'b0 ;
-  assign i_CPU_RDY   = 1'b1 ;
+  assign i_CPU_RDY   = ~hold ;
   // ---------------------------------------- //
 
 	wire [3:0] cs = o_CPU_AB[15:12]; // 16 "devices"/ banks, $0 to $F

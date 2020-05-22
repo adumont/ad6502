@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableWidget>
+#include <QCheckBox>
 #include "Vtop.h"
 #include "verilated_save.h"
 #include "verilated_vcd_c.h"
@@ -57,6 +58,8 @@ private slots:
 
     void on_pbHold_toggled(bool checked);
 
+    void on_any_gpio_in_toggled();
+
 private:
     Ui::MainWindow *ui;
     QTimer *m_timer;
@@ -81,6 +84,11 @@ private:
     QString verilatorString(QData&);
 
     void highlightLabel(QWidget*, bool);
+
+    void topEval();
+
+    unsigned char gpio_in;
+    QList<QCheckBox*> gpio_in_list;
 
 };
 
