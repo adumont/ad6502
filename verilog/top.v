@@ -102,7 +102,7 @@ module top (
 	wire cs_acia = ( cs == 4'h 2 );   // ACIA
 	wire cs_rom  = ( cs == 4'h F );   // ROM (program) $F000 to $FFFF, $1000 = 4096 Bytes long (4KB)
 
-	// RAM @ pages $00 to $0F
+	// RAM @ pages $00__ to $0F__
 	reg [7:0] ram_mem[4095:0];
 	reg [7:0] ram_do;
 	always @(posedge clk)
@@ -111,7 +111,7 @@ module top (
 	always @(posedge clk)
 		ram_do <= ram_mem[o_CPU_AB[11:0]];
 	
-	// GPIO @ page 10-1f
+	// GPIO @ page $10__ to $1F__
 	reg [7:0] gpio_do;
 	always @(posedge clk)
 		if( o_CPU_WE && cs_gpio )
@@ -134,7 +134,7 @@ module top (
 	// 	.irq(CPU_IRQ)			// interrupt request
 	// );
 	
-	// ROM @ pages f0,f1... (Addr: $F0_00 to $FF_FF)
+	// ROM @ pages $F0__ to $FF__ (Addr: $F0_00 to $FF_FF)
   reg [7:0] rom_mem[4095:0];
 	reg [7:0] rom_do;
 	initial

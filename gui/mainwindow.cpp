@@ -25,14 +25,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Clock Initialization
-    clk = true;
+    clk = 0;
 
     bgColor = QString("background-color: rgb(128, 213, 255);");
 
     // Create our design model with Verilator
     top = new Vtop;
-    top->clk = clk;
-    top->eval(); // initialize (so PROG gets loaded)
 
     // Verilated::internalsDump();  // See scopes to help debug
 
@@ -42,10 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     top->trace (tfp, 99);
     //tfp->spTrace()->set_time_resolution ("1 ps");
     tfp->open ("ad6502.vcd");
-    if(ui->actionGenerate_Trace->isChecked()) {
-        tfp->dump(main_time);
-        tfp->flush(); // any impact on perf? not relevant here
-    }
+
+    topEval(); // first eval, will load initialize rom
 
     gpio_in_list<<ui->gpio_in0;
     gpio_in_list<<ui->gpio_in1;
@@ -69,9 +65,26 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(clkTick()));
     // m_timer->start( ui->clkPeriod->value() );
 
-#ifdef KK
-    // PROG table, set headers
+    mem_base_addr=256*(16*mem_page_high+mem_page_low);
+
     QStringList LIST;
+
+    // RAM table, set headers
+    LIST.clear();
+    for(int i=0; i<16; i++){ LIST.append(QString("%1").arg( i,1,16,QChar('0'))); }
+    ui->tblRAM->setVerticalHeaderLabels(LIST);
+    LIST.clear();
+    for(int i=0; i<16; i++){ LIST.append(QString("_%1").arg(i,1,16,QChar('0'))); }
+    ui->tblRAM->setHorizontalHeaderLabels(LIST);
+
+    // Initialize RAM table
+    for(int i=0; i<16; i++){
+        for(int j=0; j<16; j++){
+            ui->tblRAM->setItem(j,i,new QTableWidgetItem( formatData( top->top__DOT__ram_mem[mem_base_addr + 16*j+i] ) ));
+//            ui->tblRAM->item(j, i)->setForeground(Qt::gray);
+        }
+    }
+#ifdef KK
     for(int i=0; i<256; i++){ LIST.append(formatData(i)); }
     ui->tblPROG->setVerticalHeaderLabels(LIST);
     ui->tblPROG->setHorizontalHeaderLabels(QStringList("Data"));
@@ -96,21 +109,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->tblOUTBOX->setVerticalHeaderLabels(LIST.mid(0,32));
 
-    // RAM table, set headers
-    LIST.clear();
-    for(int i=0; i<16; i++){ LIST.append(QString("%1").arg( i,1,16,QChar('0'))); }
-    ui->tblRAM->setVerticalHeaderLabels(LIST);
-    LIST.clear();
-    for(int i=0; i<16; i++){ LIST.append(QString("_%1").arg(i,1,16,QChar('0'))); }
-    ui->tblRAM->setHorizontalHeaderLabels(LIST);
-
-    // Initialize RAM table
-    for(int i=0; i<16; i++){
-        for(int j=0; j<16; j++){
-            ui->tblRAM->setItem(j,i,new QTableWidgetItem( formatData( top->hrmcpu__DOT__MEMORY0__DOT__mem_wrapper0__DOT__ram0__DOT__mem[16*j+i] ) ));
-            ui->tblRAM->item(j, i)->setForeground(Qt::gray);
-        }
-    }
 
     ttr_pbPUSH = 0;
 
@@ -137,10 +135,14 @@ void MainWindow::clkTick()
     clk = ! clk;
     main_time++;
 
-    top->clk = clk;
+    topEval();
+
+    clk = ! clk;
+    main_time++;
+
+    topEval();
 
     updateUI();
-
 }
 
 void MainWindow::on_pbA_pressed()
@@ -165,6 +167,16 @@ void MainWindow::on_pbB_toggled(bool checked)
     }
 }
 
+void MainWindow::topEval()
+{
+    top->clk = clk;
+    top->eval();
+    if(ui->actionGenerate_Trace->isChecked()) {
+        tfp->dump(main_time);
+        tfp->flush();
+    }
+}
+
 void MainWindow::updateUI()
 {
 
@@ -184,12 +196,6 @@ void MainWindow::updateUI()
     bool toUintSuccess;
     top->cpu_in_data = ui->editINdata->text().toUInt(&toUintSuccess,16); //ui->editINdata->text().toInt();
 #endif
-
-    top->eval();
-    if(ui->actionGenerate_Trace->isChecked()) {
-        tfp->dump(main_time);
-        tfp->flush(); // any impact on perf? not relevant here
-    }
 
     // Control Block
     ui->clk->setState( clk );
@@ -241,6 +247,44 @@ void MainWindow::updateUI()
 
     // GPIO IN
     ui->val_gpio_in->setText(QString("%1").arg( gpio_in, 2, 16, QChar('0')).toUpper());
+
+    // Memory
+    bool sel = ( mem_page_high==0 && top->top__DOT__cs_ram ) || ( mem_page_high==15 && top->top__DOT__cs_rom );
+    ui->mem_start->setText( QString("%1").arg( mem_base_addr      , 4, 16, QChar('0')).toUpper() );
+    ui->mem_end->setText(   QString("%1").arg( mem_base_addr + 255, 4, 16, QChar('0')).toUpper() );
+    ui->led_mem_sel->setState( sel );
+
+    // fill RAM table with current values
+    int base = 256*mem_page_low;
+    CData* mem;
+
+    if(mem_page_high==0)
+        mem=top->top__DOT__ram_mem;
+    else
+        mem=top->top__DOT__rom_mem;
+
+    for(int i=0; i<16; i++){
+        for(int j=0; j<16; j++){
+            ui->tblRAM->item(j,i)->setText(formatData( mem[base + 16*j+i ] ));
+
+            if(sel && ( base+16*j+i == (top->top__DOT__CPU__DOT__AB & 4095) ))
+                ui->tblRAM->item(j, i)->setBackground(QColor(128, 213, 255, 255));
+            else
+                ui->tblRAM->item(j, i)->setBackground(Qt::white);
+
+//            // IIF we're reading/writing to RAM (mmio=0), then hightlight corresponding cell
+//            if( !top->hrmcpu__DOT__MEMORY0__DOT__mmio && top->hrmcpu__DOT__MEMORY0__DOT__AR_q == (16*j+i) )
+//            {
+//                if( clk==0 && top->hrmcpu__DOT__MEMORY0__DOT__wM ) {
+//                    ui->tblRAM->item(j, i)->setBackground(QColor(128, 213, 255, 255));
+//                    ui->tblRAM->item(j, i)->setForeground(Qt::black);
+//                }
+//                else if( clk==0 && top->hrmcpu__DOT__MEMORY0__DOT__wM == 0 ) {
+//                    ui->tblRAM->item(j, i)->setBackground(Qt::white);
+//                }
+//            }
+        }
+    }
 
 #ifdef KK
     ui->led_halt->setState(top->hrmcpu__DOT__cu_halt);
@@ -557,16 +601,6 @@ void MainWindow::on_pbINSTR_pressed()
 #endif
 }
 
-void MainWindow::on_dmp_module_valueChanged(int arg1)
-{
-    updateUI();
-}
-
-void MainWindow::on_dmp_position_valueChanged(int arg1)
-{
-    updateUI();
-}
-
 void MainWindow::on_pbHold_toggled(bool checked)
 {
     ui->pbINSTR->setDisabled(checked);
@@ -591,4 +625,29 @@ void MainWindow::on_any_gpio_in_toggled()
 
     // store value in Verilator model
     top->gpio_i=gpio_in;
+}
+
+void MainWindow::on_mem_page_valueChanged(int base)
+{
+    mem_page_low = base;
+    mem_base_addr=256*(16*mem_page_high+mem_page_low);
+    updateUI();
+}
+
+void MainWindow::on_radioRam_toggled(bool checked)
+{
+    if(checked) {
+        mem_page_high=0;
+        mem_base_addr=256*(16*mem_page_high+mem_page_low);
+        updateUI();
+    }
+}
+
+void MainWindow::on_radioRom_toggled(bool checked)
+{
+    if(checked) {
+        mem_page_high=15;
+        mem_base_addr=256*(16*mem_page_high+mem_page_low);
+        updateUI();
+    }
 }

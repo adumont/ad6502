@@ -52,19 +52,24 @@ private slots:
 
     void on_pbINSTR_pressed();
 
-    void on_dmp_module_valueChanged(int arg1);
-
-    void on_dmp_position_valueChanged(int arg1);
-
     void on_pbHold_toggled(bool checked);
 
     void on_any_gpio_in_toggled();
+
+    void on_mem_page_valueChanged(int arg1);
+
+    void on_radioRam_toggled(bool checked);
+
+    void on_radioRom_toggled(bool checked);
 
 private:
     Ui::MainWindow *ui;
     QTimer *m_timer;
     bool clk;
     int counter;
+    unsigned char mem_page_high = 0; // 0: ram, f: rom
+    unsigned char mem_page_low  = 0; // 0 to f
+    unsigned int  mem_base_addr = 0;
     QString bgColor;
 
     Vtop * top;
@@ -87,7 +92,7 @@ private:
 
     void topEval();
 
-    unsigned char gpio_in;
+    unsigned char gpio_in = 0 ;
     QList<QCheckBox*> gpio_in_list;
 
 };
