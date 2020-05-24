@@ -8,6 +8,10 @@
 
 This project is about playing with and learning about the 6502 and computer architecture. I synthesize the 6502 core for the Icezum Alhambra (Lattice ice40hx1k FPGA).
 
+## GUI
+
+![](assets/gui/vokoscreen-2020-05-24_15-01-50.gif)
+
 # External files & Credits
 
 In this project I have re-used and/or modified some files from these external sources:
