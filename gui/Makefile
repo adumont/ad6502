@@ -41,7 +41,10 @@ clean: vclean qtclean
 
 refresh: qtclean $(PROJECT).mk
 
-run: $(PROJECT)
+rom.hex: .FORCE
+	make -C ../test_asm/ && cp ../test_asm/code.hex rom.hex
+
+run: $(PROJECT) rom.hex
 	./$(PROJECT)
 
 .PHONY: clean .FORCE qtclean vclean verilator

@@ -726,7 +726,7 @@
      <rect>
       <x>10</x>
       <y>120</y>
-      <width>431</width>
+      <width>441</width>
       <height>366</height>
      </rect>
     </property>
@@ -813,7 +813,7 @@
     <widget class="QLabel" name="mem_start">
      <property name="geometry">
       <rect>
-       <x>52</x>
+       <x>172</x>
        <y>23</y>
        <width>31</width>
        <height>20</height>
@@ -835,7 +835,7 @@
     <widget class="QLabel" name="label_24">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>120</x>
        <y>23</y>
        <width>50</width>
        <height>20</height>
@@ -857,7 +857,7 @@
     <widget class="QLabel" name="mem_end">
      <property name="geometry">
       <rect>
-       <x>122</x>
+       <x>242</x>
        <y>23</y>
        <width>31</width>
        <height>20</height>
@@ -879,7 +879,7 @@
     <widget class="QLabel" name="label_26">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>200</x>
        <y>23</y>
        <width>40</width>
        <height>20</height>
@@ -901,9 +901,9 @@
     <widget class="QLabel" name="label_27">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>385</x>
        <y>23</y>
-       <width>61</width>
+       <width>31</width>
        <height>20</height>
       </rect>
      </property>
@@ -923,7 +923,7 @@
     <widget class="MLed" name="led_mem_sel">
      <property name="geometry">
       <rect>
-       <x>405</x>
+       <x>420</x>
        <y>27</y>
        <width>10</width>
        <height>10</height>
@@ -939,60 +939,10 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_52">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>23</y>
-       <width>41</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Monospace</family>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>page:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="mem_page">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>23</y>
-       <width>41</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="minimum">
-      <number>0</number>
-     </property>
-     <property name="maximum">
-      <number>15</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="displayIntegerBase">
-      <number>16</number>
-     </property>
-    </widget>
     <widget class="QRadioButton" name="radioRam">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>10</x>
        <y>23</y>
        <width>51</width>
        <height>20</height>
@@ -1008,7 +958,7 @@
     <widget class="QRadioButton" name="radioRom">
      <property name="geometry">
       <rect>
-       <x>310</x>
+       <x>60</x>
        <y>23</y>
        <width>51</width>
        <height>20</height>
@@ -1016,6 +966,25 @@
      </property>
      <property name="text">
       <string>rom</string>
+     </property>
+    </widget>
+    <widget class="QScrollBar" name="verticalScrollBar">
+     <property name="geometry">
+      <rect>
+       <x>417</x>
+       <y>50</y>
+       <width>16</width>
+       <height>308</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>15</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
     </widget>
    </widget>
@@ -1044,7 +1013,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>720</x>
+      <x>240</x>
       <y>500</y>
       <width>51</width>
       <height>22</height>
@@ -1163,7 +1132,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>460</x>
       <y>120</y>
       <width>191</width>
       <height>61</height>
