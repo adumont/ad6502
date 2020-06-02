@@ -228,83 +228,6 @@ localparam
     ZPX0   = 6'd48, // ZP, X   - fetch ZP, and send to ALU (+X)
     ZPX1   = 6'd49; // ZP, X   - load from memory
 
-`ifndef SYNTHESIS
-/*
- * easy to read names in simulator output
- */
-reg [8*6-1:0] statename;
-
-always @*
-    case( state )
-            DECODE: statename = "DECODE";
-            REG:    statename = "REG";
-            ZP0:    statename = "ZP0";
-            ZPX0:   statename = "ZPX0";
-            ZPX1:   statename = "ZPX1";
-            ABS0:   statename = "ABS0";
-            ABS1:   statename = "ABS1";
-            ABSX0:  statename = "ABSX0";
-            ABSX1:  statename = "ABSX1";
-            ABSX2:  statename = "ABSX2";
-            INDX0:  statename = "INDX0";
-            INDX1:  statename = "INDX1";
-            INDX2:  statename = "INDX2";
-            INDX3:  statename = "INDX3";
-            INDY0:  statename = "INDY0";
-            INDY1:  statename = "INDY1";
-            INDY2:  statename = "INDY2";
-            INDY3:  statename = "INDY3";
-             READ:  statename = "READ";
-            WRITE:  statename = "WRITE";
-            FETCH:  statename = "FETCH";
-            PUSH0:  statename = "PUSH0";
-            PUSH1:  statename = "PUSH1";
-            PULL0:  statename = "PULL0";
-            PULL1:  statename = "PULL1";
-            PULL2:  statename = "PULL2";
-            JSR0:   statename = "JSR0";
-            JSR1:   statename = "JSR1";
-            JSR2:   statename = "JSR2";
-            JSR3:   statename = "JSR3";
-            RTI0:   statename = "RTI0";
-            RTI1:   statename = "RTI1";
-            RTI2:   statename = "RTI2";
-            RTI3:   statename = "RTI3";
-            RTI4:   statename = "RTI4";
-            RTS0:   statename = "RTS0";
-            RTS1:   statename = "RTS1";
-            RTS2:   statename = "RTS2";
-            RTS3:   statename = "RTS3";
-            BRK0:   statename = "BRK0";
-            BRK1:   statename = "BRK1";
-            BRK2:   statename = "BRK2";
-            BRK3:   statename = "BRK3";
-            BRA0:   statename = "BRA0";
-            BRA1:   statename = "BRA1";
-            BRA2:   statename = "BRA2";
-            JMP0:   statename = "JMP0";
-            JMP1:   statename = "JMP1";
-            JMPI0:  statename = "JMPI0";
-            JMPI1:  statename = "JMPI1";
-            default:  statename = "INVAL";
-    endcase
-
-    always @(*)
-    begin
-        $display( "%06t %d PCtmp:%04x PC:%04x %6s IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x AB:%04x DI:%02x DO:%02x", $time, clk, PC_temp, PC, statename, IR, A, X, Y, S, C, Z, V, N, P, AB, DI, DO );
-    end
-
-    // always @(*)
-    //     $display( "%08t, PC:%04x PC_inc:%d PC_temp:%04x", $time, PC, PC_inc, PC_temp);
-
-    // always @(*)
-    //     $display( "%08t, IR:%02x IRHOLD_valid:%d IRHOLD:%02x", $time, IR, IRHOLD_valid, IRHOLD);
-
-
-`endif
-
-
-
 /*
  * Program Counter Increment/Load. First calculate the base value in
  * PC_temp.
@@ -864,6 +787,7 @@ always @(posedge clk )
             IRHOLD_valid <= 0;
     end
 
+
 assign IR = (IRQ & ~I) | NMI_edge ? 8'h00 :
                      IRHOLD_valid ? IRHOLD : DIMUX;
 
@@ -1239,6 +1163,94 @@ always @(posedge clk )
         NMI_edge <= 0;
     else if( NMI & ~NMI_1 )
         NMI_edge <= 1;
+
+
+
+`ifndef SYNTHESIS
+/*
+ * easy to read names in simulator output
+ */
+reg [8*6-1:0] statename;
+
+always @*
+    case( state )
+            DECODE: statename = "DECODE";
+            REG:    statename = "REG";
+            ZP0:    statename = "ZP0";
+            ZPX0:   statename = "ZPX0";
+            ZPX1:   statename = "ZPX1";
+            ABS0:   statename = "ABS0";
+            ABS1:   statename = "ABS1";
+            ABSX0:  statename = "ABSX0";
+            ABSX1:  statename = "ABSX1";
+            ABSX2:  statename = "ABSX2";
+            INDX0:  statename = "INDX0";
+            INDX1:  statename = "INDX1";
+            INDX2:  statename = "INDX2";
+            INDX3:  statename = "INDX3";
+            INDY0:  statename = "INDY0";
+            INDY1:  statename = "INDY1";
+            INDY2:  statename = "INDY2";
+            INDY3:  statename = "INDY3";
+             READ:  statename = "READ";
+            WRITE:  statename = "WRITE";
+            FETCH:  statename = "FETCH";
+            PUSH0:  statename = "PUSH0";
+            PUSH1:  statename = "PUSH1";
+            PULL0:  statename = "PULL0";
+            PULL1:  statename = "PULL1";
+            PULL2:  statename = "PULL2";
+            JSR0:   statename = "JSR0";
+            JSR1:   statename = "JSR1";
+            JSR2:   statename = "JSR2";
+            JSR3:   statename = "JSR3";
+            RTI0:   statename = "RTI0";
+            RTI1:   statename = "RTI1";
+            RTI2:   statename = "RTI2";
+            RTI3:   statename = "RTI3";
+            RTI4:   statename = "RTI4";
+            RTS0:   statename = "RTS0";
+            RTS1:   statename = "RTS1";
+            RTS2:   statename = "RTS2";
+            RTS3:   statename = "RTS3";
+            BRK0:   statename = "BRK0";
+            BRK1:   statename = "BRK1";
+            BRK2:   statename = "BRK2";
+            BRK3:   statename = "BRK3";
+            BRA0:   statename = "BRA0";
+            BRA1:   statename = "BRA1";
+            BRA2:   statename = "BRA2";
+            JMP0:   statename = "JMP0";
+            JMP1:   statename = "JMP1";
+            JMPI0:  statename = "JMPI0";
+            JMPI1:  statename = "JMPI1";
+            default:  statename = "INVAL";
+    endcase
+
+    always @(*)
+    begin
+        if(clk) $display( "%06t %d PCtmp:%04x PC:%04x %6s IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x AB:%04x DI:%02x DO:%02x", $time, clk, PC_temp, PC, statename, IR, A, X, Y, S, C, Z, V, N, P, AB, DI, DO );
+    end
+
+    reg [ 7:0] curr_IR = 0;
+    reg [15:0] curr_PC = 0;
+    reg [15:0] old_AB = 0;
+
+    always @(posedge clk)
+        old_AB <= AB; // we keep AB from last clk
+
+    always @(*)
+    begin
+        if( state == DECODE && RDY )
+        begin
+            curr_PC = old_AB;
+            curr_IR = IR;
+            if(clk)
+                $display( "|> %06t %d curr_PC:%04x curr_IR:%02x -- AB:%04x IR:%02x", $time, clk, curr_PC, curr_IR, AB, IR);
+        end
+    end
+
+`endif
 
 endmodule
 `endif // __CPU_V__
