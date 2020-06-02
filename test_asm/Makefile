@@ -1,26 +1,14 @@
-# Makefile for cc65 to verilog hex
-# 03-04-19 E. Brombaugh
-
-# C and assy source files
-SRC =	init.s interrupt.s vectors.s
-
-# compiler output
-OBJ = code
-
 # build tools & options
 CL65 = cl65
-CLFLAGS  = -t none -O --cpu 6502 -C sbc.cfg -m $(OBJ).map
+CLFLAGS  = -t none -O --cpu 6502 -C sbc.cfg -m $*.map
 HEXDUMP = hexdump
 HEXDUMP_ARGS = -v -e '1/1 "%02x " "\n"'
 
-# Targets
-all: $(OBJ).hex
-
-$(OBJ).hex: $(OBJ)
+%.hex: %.bin
 	$(HEXDUMP) $(HEXDUMP_ARGS) $< > $@
 
-$(OBJ): $(SRC)
-	$(CL65) $(CLFLAGS) -o $(OBJ) $(SRC)
+%.bin: %.s interrupt.s vectors.s
+	$(CL65) $(CLFLAGS) -o $@ $^ none.lib
 
 clean:
-	-rm -f *.o $(OBJ) $(OBJ).hex $(OBJ).map
+	-rm -f *.o *.hex *.map *.bin
