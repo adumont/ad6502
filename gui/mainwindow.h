@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTableWidget>
 #include <QCheckBox>
+#include <QFontDatabase>
 #include "Vtop.h"
 #include "verilated_save.h"
 #include "verilated_vcd_c.h"

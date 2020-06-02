@@ -41,8 +41,8 @@ clean: vclean qtclean
 
 refresh: qtclean $(PROJECT).mk
 
-rom.hex: .FORCE
-	make -C ../test_asm/ && cp ../test_asm/code.hex rom.hex
+#rom.hex: .FORCE
+#	make -C ../test_asm/ && cp ../test_asm/code.hex rom.hex
 
 run: $(PROJECT) rom.hex
 	./$(PROJECT)

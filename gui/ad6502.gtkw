@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Wed May 20 18:57:41 2020
+[*]
+[dumpfile] "/home/adumont/projects/ad6502/gui/ad6502.vcd"
+[dumpfile_mtime] "Wed May 20 18:52:50 2020"
+[dumpfile_size] 503850
+[savefile] "/home/adumont/projects/ad6502/gui/ad6502.gtkw"
+[timestart] 1
+[size] 1678 998
+[pos] -1 -1
+*-4.323001 8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.top.
+[treeopen] TOP.top.CPU.
+[sst_width] 197
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 299
+@22
+TOP.gpio_o[7:0]
+@28
+TOP.clk
+TOP.i_rst
+TOP.top.reset_n
+@200
+-
+@28
+TOP.top.cs_ram
+@29
+TOP.top.cs_rom
+@28
+TOP.top.cs_gpio
+TOP.top.cs_acia
+@200
+-
+@22
+TOP.top.i_CPU_DI[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

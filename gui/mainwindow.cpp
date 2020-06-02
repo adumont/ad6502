@@ -43,6 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     topEval(); // first eval, will load initialize rom
 
+    int k = QFontDatabase::addApplicationFont(":/font/assets/font/HD44780.ttf");
+
+    QFont font = QFont("HD44780");
+
+    ui->lcd->setFont(font);
+
     gpio_in_list<<ui->gpio_in0;
     gpio_in_list<<ui->gpio_in1;
     gpio_in_list<<ui->gpio_in2;

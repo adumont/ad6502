@@ -968,7 +968,7 @@
       <string>rom</string>
      </property>
     </widget>
-    <widget class="QScrollBar" name="verticalScrollBar">
+    <widget class="QScrollBar" name="mem_page">
      <property name="geometry">
       <rect>
        <x>417</x>
@@ -1134,7 +1134,7 @@
      <rect>
       <x>460</x>
       <y>120</y>
-      <width>191</width>
+      <width>201</width>
       <height>61</height>
      </rect>
     </property>
@@ -1147,7 +1147,7 @@
     <widget class="QLabel" name="val_gpio_out">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>166</x>
        <y>40</y>
        <width>30</width>
        <height>20</height>
@@ -1321,7 +1321,7 @@
     <widget class="QLabel" name="val_gpio_in">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>166</x>
        <y>20</y>
        <width>30</width>
        <height>20</height>
@@ -1488,35 +1488,6 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <zorder>val_gpio_out</zorder>
-    <zorder>led7</zorder>
-    <zorder>led6</zorder>
-    <zorder>led5</zorder>
-    <zorder>led4</zorder>
-    <zorder>led3</zorder>
-    <zorder>led2</zorder>
-    <zorder>led1</zorder>
-    <zorder>led0</zorder>
-    <zorder>val_gpio_in</zorder>
-    <zorder>gpio_in4</zorder>
-    <zorder>gpio_in1</zorder>
-    <zorder>gpio_in7</zorder>
-    <zorder>gpio_in6</zorder>
-    <zorder>gpio_in5</zorder>
-    <zorder>gpio_in2</zorder>
-    <zorder>gpio_in0</zorder>
-    <zorder>gpio_in3</zorder>
-    <zorder>val_gpio_in</zorder>
-    <zorder>gpio_in4</zorder>
-    <zorder>gpio_in1</zorder>
-    <zorder>gpio_in7</zorder>
-    <zorder>gpio_in6</zorder>
-    <zorder>gpio_in5</zorder>
-    <zorder>gpio_in2</zorder>
-    <zorder>gpio_in0</zorder>
-    <zorder>gpio_in3</zorder>
-    <zorder>label_30</zorder>
-    <zorder>label_33</zorder>
    </widget>
    <widget class="QGroupBox" name="gMMIO">
     <property name="enabled">
@@ -2137,6 +2108,67 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="gPC_2">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>190</y>
+      <width>202</width>
+      <height>94</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>LCD</string>
+    </property>
+    <widget class="QLabel" name="lcd">
+     <property name="geometry">
+      <rect>
+       <x>7</x>
+       <y>24</y>
+       <width>190</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <stylestrategy>NoAntialias</stylestrategy>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(173, 220, 0);
+color:rgb(89, 112, 0)</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+&lt;p style=&quot;line-height:22&quot;&gt;
+&lt;span&gt;0123456789ABCDEF0123&lt;/span&gt;
+&lt;/p&gt;
+&lt;p style=&quot;line-height:22&quot;&gt;
+&lt;span&gt;0123456789ABCDEF0123&lt;/span&gt;
+&lt;/p&gt;
+&lt;p style=&quot;line-height:22&quot;&gt;
+&lt;span&gt;0123456789ABCDEF0123&lt;/span&gt;
+&lt;/p&gt;
+&lt;p style=&quot;line-height:22&quot;&gt;
+&lt;span&gt;0123456789ABCDEF0123&lt;/span&gt;
+&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -2183,7 +2215,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Generate Trace</string>
+    <string>&amp;Generate Trace</string>
    </property>
   </action>
  </widget>

@@ -19,4 +19,7 @@
         <file>assets/gates/XOR.svg</file>
         <file>assets/gates/NOR.svg</file>
     </qresource>
+    <qresource prefix="/font">
+        <file>assets/font/HD44780.ttf</file>
+    </qresource>
 </RCC>
