@@ -212,6 +212,15 @@ void MainWindow::updateUI()
     ui->cu_statename->setText( verilatorString( top->top__DOT__CPU__DOT__statename ) );
     ui->led_cpu_reset->setState(top->top__DOT__CPU__DOT__reset);
 
+    // Processor flags
+    ui->P_flag->setText(formatData( top->top__DOT__CPU__DOT__P ));
+    ui->led_C->setState(top->top__DOT__CPU__DOT__C);
+    ui->led_Z->setState(top->top__DOT__CPU__DOT__Z);
+    ui->led_I->setState(top->top__DOT__CPU__DOT__I);
+    ui->led_D->setState(top->top__DOT__CPU__DOT__D);
+    ui->led_V->setState(top->top__DOT__CPU__DOT__V);
+    ui->led_N->setState(top->top__DOT__CPU__DOT__N);
+
     // PC
     ui->PC_PC->setText(formatData( top->top__DOT__CPU__DOT__PC));
 
