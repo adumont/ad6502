@@ -19,10 +19,12 @@ LIBS += ../verilog/obj_dir/*.o
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mled.cpp
+    mled.cpp \
+    mlcd.cpp
 
 HEADERS  += mainwindow.h \
-    mled.h
+    mled.h \
+    mlcd.h
 
 FORMS    += mainwindow.ui
 
