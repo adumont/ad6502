@@ -114,8 +114,13 @@ module top (
 	// GPIO @ page $10__ to $1F__
 	reg [7:0] gpio_do;
 	always @(posedge clk)
+	begin
+		if( i_rst )
+			gpio_o <= 8'h 00;
 		if( o_CPU_WE && cs_gpio )
 			gpio_o <= o_CPU_DO;
+	end
+
 	always @(posedge clk)
 		gpio_do <= gpio_i;
 	
