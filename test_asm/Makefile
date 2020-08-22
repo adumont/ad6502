@@ -1,6 +1,6 @@
 # build tools & options
 CL65 = cl65
-CLFLAGS  = -t none -O --cpu 6502 -C sbc.cfg -m $*.map
+CLFLAGS  = -d -v -g -t none -O --cpu 6502 -C sbc.cfg -m $*.map
 HEXDUMP = hexdump
 HEXDUMP_ARGS = -v -e '1/1 "%02x " "\n"'
 
