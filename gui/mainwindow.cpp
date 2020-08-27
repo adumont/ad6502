@@ -22,6 +22,229 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    // ugly to put this here... will fix later
+    instr[0]=10; mode[0]=0; // BRK SNGL
+    instr[1]=34; mode[1]=5; // ORA INDX
+    instr[5]=34; mode[5]=2; // ORA ZP
+    instr[6]=2; mode[6]=2; // ASL ZP
+    instr[8]=36; mode[8]=0; // PHP SNGL
+    instr[9]=34; mode[9]=1; // ORA Imm
+    instr[10]=2; mode[10]=0; // ASL SNGL
+    instr[13]=34; mode[13]=8; // ORA ABS
+    instr[14]=2; mode[14]=8; // ASL ABS
+    instr[16]=9; mode[16]=7; // BPL BRA
+    instr[17]=34; mode[17]=6; // ORA INDY
+    instr[21]=34; mode[21]=3; // ORA ZPX
+    instr[22]=2; mode[22]=3; // ASL ZPX
+    instr[24]=13; mode[24]=0; // CLC SNGL
+    instr[25]=34; mode[25]=10; // ORA ABSY
+    instr[29]=34; mode[29]=9; // ORA ABSX
+    instr[30]=2; mode[30]=9; // ASL ABSX
+    instr[32]=28; mode[32]=8; // JSR ABS
+    instr[33]=1; mode[33]=5; // AND INDX
+    instr[36]=6; mode[36]=2; // BIT ZP
+    instr[37]=1; mode[37]=2; // AND ZP
+    instr[38]=39; mode[38]=2; // ROL ZP
+    instr[40]=38; mode[40]=0; // PLP SNGL
+    instr[41]=1; mode[41]=1; // AND Imm
+    instr[42]=39; mode[42]=0; // ROL SNGL
+    instr[44]=6; mode[44]=8; // BIT ABS
+    instr[45]=1; mode[45]=8; // AND ABS
+    instr[46]=39; mode[46]=8; // ROL ABS
+    instr[48]=7; mode[48]=7; // BMI BRA
+    instr[49]=1; mode[49]=6; // AND INDY
+    instr[53]=1; mode[53]=3; // AND ZPX
+    instr[54]=39; mode[54]=3; // ROL ZPX
+    instr[56]=44; mode[56]=0; // SEC SNGL
+    instr[57]=1; mode[57]=10; // AND ABSY
+    instr[61]=1; mode[61]=9; // AND ABSX
+    instr[62]=39; mode[62]=9; // ROL ABSX
+    instr[64]=41; mode[64]=0; // RTI SNGL
+    instr[65]=23; mode[65]=5; // EOR INDX
+    instr[69]=23; mode[69]=2; // EOR ZP
+    instr[70]=32; mode[70]=2; // LSR ZP
+    instr[72]=35; mode[72]=0; // PHA SNGL
+    instr[73]=23; mode[73]=1; // EOR Imm
+    instr[74]=32; mode[74]=0; // LSR SNGL
+    instr[76]=27; mode[76]=8; // JMP ABS
+    instr[77]=23; mode[77]=8; // EOR ABS
+    instr[78]=32; mode[78]=8; // LSR ABS
+    instr[80]=11; mode[80]=7; // BVC BRA
+    instr[81]=23; mode[81]=6; // EOR INDY
+    instr[85]=23; mode[85]=3; // EOR ZPX
+    instr[86]=32; mode[86]=3; // LSR ZPX
+    instr[88]=15; mode[88]=0; // CLI SNGL
+    instr[89]=23; mode[89]=10; // EOR ABSY
+    instr[93]=23; mode[93]=9; // EOR ABSX
+    instr[94]=32; mode[94]=9; // LSR ABSX
+    instr[96]=42; mode[96]=0; // RTS SNGL
+    instr[97]=0; mode[97]=5; // ADC INDX
+    instr[101]=0; mode[101]=2; // ADC ZP
+    instr[102]=40; mode[102]=2; // ROR ZP
+    instr[104]=37; mode[104]=0; // PLA SNGL
+    instr[105]=0; mode[105]=1; // ADC Imm
+    instr[106]=40; mode[106]=0; // ROR SNGL
+    instr[108]=27; mode[108]=11; // JMP IND
+    instr[109]=0; mode[109]=8; // ADC ABS
+    instr[110]=40; mode[110]=8; // ROR ABS
+    instr[112]=12; mode[112]=7; // BVS BRA
+    instr[113]=0; mode[113]=6; // ADC INDY
+    instr[117]=0; mode[117]=3; // ADC ZPX
+    instr[118]=40; mode[118]=3; // ROR ZPX
+    instr[120]=46; mode[120]=0; // SEI SNGL
+    instr[121]=0; mode[121]=10; // ADC ABSY
+    instr[125]=0; mode[125]=9; // ADC ABSX
+    instr[126]=40; mode[126]=9; // ROR ABSX
+    instr[129]=47; mode[129]=5; // STA INDX
+    instr[132]=49; mode[132]=2; // STY ZP
+    instr[133]=47; mode[133]=2; // STA ZP
+    instr[134]=48; mode[134]=2; // STX ZP
+    instr[136]=22; mode[136]=0; // DEY SNGL
+    instr[138]=53; mode[138]=0; // TXA SNGL
+    instr[140]=49; mode[140]=8; // STY ABS
+    instr[141]=47; mode[141]=8; // STA ABS
+    instr[142]=48; mode[142]=8; // STX ABS
+    instr[144]=3; mode[144]=7; // BCC BRA
+    instr[145]=47; mode[145]=6; // STA INDY
+    instr[148]=49; mode[148]=3; // STY ZPX
+    instr[149]=47; mode[149]=3; // STA ZPX
+    instr[150]=48; mode[150]=4; // STX ZPY
+    instr[152]=55; mode[152]=0; // TYA SNGL
+    instr[153]=47; mode[153]=10; // STA ABSY
+    instr[154]=54; mode[154]=0; // TXS SNGL
+    instr[157]=47; mode[157]=9; // STA ABSX
+    instr[160]=31; mode[160]=1; // LDY Imm
+    instr[161]=29; mode[161]=5; // LDA INDX
+    instr[162]=30; mode[162]=1; // LDX Imm
+    instr[164]=31; mode[164]=2; // LDY ZP
+    instr[165]=29; mode[165]=2; // LDA ZP
+    instr[166]=30; mode[166]=2; // LDX ZP
+    instr[168]=51; mode[168]=0; // TAY SNGL
+    instr[169]=29; mode[169]=1; // LDA Imm
+    instr[170]=50; mode[170]=0; // TAX SNGL
+    instr[172]=31; mode[172]=8; // LDY ABS
+    instr[173]=29; mode[173]=8; // LDA ABS
+    instr[174]=30; mode[174]=8; // LDX ABS
+    instr[176]=4; mode[176]=7; // BCS BRA
+    instr[177]=29; mode[177]=6; // LDA INDY
+    instr[180]=31; mode[180]=3; // LDY ZPX
+    instr[181]=29; mode[181]=3; // LDA ZPX
+    instr[182]=30; mode[182]=4; // LDX ZPY
+    instr[184]=16; mode[184]=0; // CLV SNGL
+    instr[185]=29; mode[185]=10; // LDA ABSY
+    instr[186]=52; mode[186]=0; // TSX SNGL
+    instr[188]=31; mode[188]=9; // LDY ABSX
+    instr[189]=29; mode[189]=9; // LDA ABSX
+    instr[190]=30; mode[190]=10; // LDX ABSY
+    instr[192]=19; mode[192]=1; // CPY Imm
+    instr[193]=17; mode[193]=5; // CMP INDX
+    instr[196]=19; mode[196]=2; // CPY ZP
+    instr[197]=17; mode[197]=2; // CMP ZP
+    instr[198]=20; mode[198]=2; // DEC ZP
+    instr[200]=26; mode[200]=0; // INY SNGL
+    instr[201]=17; mode[201]=1; // CMP Imm
+    instr[202]=21; mode[202]=0; // DEX SNGL
+    instr[204]=19; mode[204]=8; // CPY ABS
+    instr[205]=17; mode[205]=8; // CMP ABS
+    instr[206]=20; mode[206]=8; // DEC ABS
+    instr[208]=8; mode[208]=7; // BNE BRA
+    instr[209]=17; mode[209]=6; // CMP INDY
+    instr[213]=17; mode[213]=3; // CMP ZPX
+    instr[214]=20; mode[214]=3; // DEC ZPX
+    instr[216]=14; mode[216]=0; // CLD SNGL
+    instr[217]=17; mode[217]=10; // CMP ABSY
+    instr[221]=17; mode[221]=9; // CMP ABSX
+    instr[222]=20; mode[222]=9; // DEC ABSX
+    instr[224]=18; mode[224]=1; // CPX Imm
+    instr[225]=43; mode[225]=5; // SBC INDX
+    instr[228]=18; mode[228]=2; // CPX ZP
+    instr[229]=43; mode[229]=2; // SBC ZP
+    instr[230]=24; mode[230]=2; // INC ZP
+    instr[232]=25; mode[232]=0; // INX SNGL
+    instr[233]=43; mode[233]=1; // SBC Imm
+    instr[234]=33; mode[234]=0; // NOP SNGL
+    instr[236]=18; mode[236]=8; // CPX ABS
+    instr[237]=43; mode[237]=8; // SBC ABS
+    instr[238]=24; mode[238]=8; // INC ABS
+    instr[240]=5; mode[240]=7; // BEQ BRA
+    instr[241]=43; mode[241]=6; // SBC INDY
+    instr[245]=43; mode[245]=3; // SBC ZPX
+    instr[246]=24; mode[246]=3; // INC ZPX
+    instr[248]=45; mode[248]=0; // SED SNGL
+    instr[249]=43; mode[249]=10; // SBC ABSY
+    instr[253]=43; mode[253]=9; // SBC ABSX
+    instr[254]=24; mode[254]=9; // INC ABSX
+
+    modeName[0]="SNGL";
+    modeName[1]="Imm";
+    modeName[2]="ZP";
+    modeName[3]="ZPX";
+    modeName[4]="ZPY";
+    modeName[5]="INDX";
+    modeName[6]="INDY";
+    modeName[7]="BRA";
+    modeName[8]="ABS";
+    modeName[9]="ABSX";
+    modeName[10]="ABSY";
+    modeName[11]="IND";
+
+    instrName[0]="ADC";
+    instrName[1]="AND";
+    instrName[2]="ASL";
+    instrName[3]="BCC";
+    instrName[4]="BCS";
+    instrName[5]="BEQ";
+    instrName[6]="BIT";
+    instrName[7]="BMI";
+    instrName[8]="BNE";
+    instrName[9]="BPL";
+    instrName[10]="BRK";
+    instrName[11]="BVC";
+    instrName[12]="BVS";
+    instrName[13]="CLC";
+    instrName[14]="CLD";
+    instrName[15]="CLI";
+    instrName[16]="CLV";
+    instrName[17]="CMP";
+    instrName[18]="CPX";
+    instrName[19]="CPY";
+    instrName[20]="DEC";
+    instrName[21]="DEX";
+    instrName[22]="DEY";
+    instrName[23]="EOR";
+    instrName[24]="INC";
+    instrName[25]="INX";
+    instrName[26]="INY";
+    instrName[27]="JMP";
+    instrName[28]="JSR";
+    instrName[29]="LDA";
+    instrName[30]="LDX";
+    instrName[31]="LDY";
+    instrName[32]="LSR";
+    instrName[33]="NOP";
+    instrName[34]="ORA";
+    instrName[35]="PHA";
+    instrName[36]="PHP";
+    instrName[37]="PLA";
+    instrName[38]="PLP";
+    instrName[39]="ROL";
+    instrName[40]="ROR";
+    instrName[41]="RTI";
+    instrName[42]="RTS";
+    instrName[43]="SBC";
+    instrName[44]="SEC";
+    instrName[45]="SED";
+    instrName[46]="SEI";
+    instrName[47]="STA";
+    instrName[48]="STX";
+    instrName[49]="STY";
+    instrName[50]="TAX";
+    instrName[51]="TAY";
+    instrName[52]="TSX";
+    instrName[53]="TXA";
+    instrName[54]="TXS";
+    instrName[55]="TYA";
+
     ui->setupUi(this);
 
     // Clock Initialization
@@ -222,7 +445,7 @@ void MainWindow::updateUI()
     ui->led_N->setState(top->top__DOT__CPU__DOT__N);
 
     // PC
-    ui->PC_PC->setText(formatData( top->top__DOT__CPU__DOT__PC));
+    ui->PC_PC->setText(formatData( top->top__DOT__CPU__DOT__curr_PC ));
 
     // Registers AXYS
     ui->R_A->setText(formatData( top->top__DOT__CPU__DOT__A ));
@@ -239,8 +462,9 @@ void MainWindow::updateUI()
     ui->led_cs_acia->setState( top->top__DOT__cs_acia );
 
     // IR Instruction Register
-    ui->IR_IR->setText(formatData( top->top__DOT__CPU__DOT__IR ));
-    ui->IR_IRHOLD->setText(formatData( top->top__DOT__CPU__DOT__IRHOLD ));
+    ui->IR_IR->setText(formatData( top->top__DOT__CPU__DOT__curr_IR ));
+    // qDebug() << top->top__DOT__CPU__DOT__curr_IR ;
+    ui->IR_INSTR_name->setText( instrName[instr[ top->top__DOT__CPU__DOT__curr_IR ] ] );
     ui->led_IRHOLD_valid->setState( top->top__DOT__CPU__DOT__IRHOLD_valid );
 
     // Data & Address Buses

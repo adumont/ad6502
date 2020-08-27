@@ -96,6 +96,11 @@ private:
     unsigned char gpio_in = 0 ;
     QList<QCheckBox*> gpio_in_list;
 
+    unsigned char instr[255];
+    unsigned char mode[255];
+    const char *modeName[12];
+    const char *instrName[56];
+
 };
 
 #endif // MAINWINDOW_H
