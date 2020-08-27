@@ -1229,7 +1229,7 @@ always @*
 
     always @(*)
     begin
-        if(clk) $display( "%06t %d PC:%04x %6s IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x AB:%04x DI:%02x DO:%02x", $time, clk, PC, statename, IR, A, X, Y, S, C, Z, V, N, P, AB, DI, DO );
+        if(!clk) $display( "%06t %d PC:%04x %6s IR:%02x A:%02x X:%02x Y:%02x S:%02x C:%d Z:%d V:%d N:%d P:%02x AB:%04x DI:%02x DO:%02x", $time, clk, PC, statename, IR, A, X, Y, S, C, Z, V, N, P, AB, DI, DO );
     end
 
     reg [ 7:0] curr_IR = 0;
