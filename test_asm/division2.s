@@ -4,21 +4,18 @@
 
 .export   _init
 
+.import   copydata
+
 .debuginfo      +       ; Generate debug info
 
 _init:
-; init routine, we initialize SP to $ff
-    cli ; clear the interrupt-disable bit in the processor status register so the processor will respond to interrupts
-    ldx #$ff
-    txs
-; and clear the D flag
-    cld
+; init routine
+    cli ; clear the interrupt-disable bit so the processor will respond to interrupts
+    cld ; and clear the D flag
+
+    jsr copydata
 
 _start:
-    lda ro_dividend
-    sta dividend
-    lda ro_divisor
-    sta divisor
     lda #0
     sta quotient
     sta remainder
@@ -62,11 +59,9 @@ _start:
     brk
 
 .segment  "RODATA"
-ro_dividend:  .byte $64
-ro_divisor:   .byte $09
 
 .segment  "DATA"
-dividend:  .byte $00
-divisor:   .byte $00
+dividend:  .byte $64
+divisor:   .byte $09
 quotient:  .byte $00
 remainder: .byte $00
