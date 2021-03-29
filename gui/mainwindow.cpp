@@ -724,7 +724,6 @@ void MainWindow::on_pbPOP_toggled(bool checked)
 
 void MainWindow::LoadProgramFromFile(QString fileName)
 {
-#ifdef KK
     if (fileName.isEmpty()) {
          qDebug() << "filename is empty, not loading";
         return;
@@ -740,24 +739,29 @@ void MainWindow::LoadProgramFromFile(QString fileName)
 
     QTextStream instream(&file);
 
-    QString line = instream.readLine();
+    int j = 0; // position in the ROM array, starts at 0, increment with each byte we write (notice j++ below)
 
-//    qDebug() << "first line: " << line;
-
-    QStringList list = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-
-//    qDebug() << list;
-
-    bool success;
-
-    for (int i = 0; i < list.size(); ++i)
+    while (!instream.atEnd())
     {
-        top->hrmcpu__DOT__program0__DOT__rom[i] = list.at(i).toUInt(&success,16);
+        QString line = instream.readLine();
+
+//        qDebug() << "first line: " << line;
+
+        QStringList list = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+
+//        qDebug() << list;
+
+        bool success;
+
+        for (int i = 0; i < list.size(); ++i)
+        {
+            top->top__DOT__rom_mem[j++] = list.at(i).toUInt(&success,16);
+        }
     }
+
     file.close();
 
     updateUI();
-#endif
 }
 
 void MainWindow::on_pbLoad_pressed()
@@ -797,7 +801,7 @@ void MainWindow::on_pbLoadPROG_pressed()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Select Program to load"), "",
-        tr("Program files (program);;Hex files (*.hex);;All Files (*)"));
+        tr("Hex files (*.hex);;Program files (program);;All Files (*)"));
 
     LoadProgramFromFile(fileName);
 }
